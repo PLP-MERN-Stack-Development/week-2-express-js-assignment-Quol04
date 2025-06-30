@@ -42,20 +42,64 @@ let products = [
 
 // Root route
 app.get('/', (req, res) => {
-  res.send('Welcome to the Product API! Go to /api/products to see all products.');
+  res.send('Hello World! Welcome to the Product API');
 });
 
 // TODO: Implement the following routes:
 // GET /api/products - Get all products
-// GET /api/products/:id - Get a specific product
-// POST /api/products - Create a new product
-// PUT /api/products/:id - Update a product
-// DELETE /api/products/:id - Delete a product
-
-// Example route implementation for GET /api/products
-app.get('/api/products', (req, res) => {
-  res.json(products);
+app.get('/api/products', async (req, res) => {
+  try {
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving products' });
+  }
 });
+// GET /api/products/:id - Get a specific product
+app.get('/api/products/:id', async (req, res) => {
+  const { id } = req.params;
+  const product = products.find(p => p.id === id);
+  if (product) {
+    res.status(200).json(product);
+  } else {
+    res.status(404).json({ message: 'Product not found' });
+  }
+});
+// POST /api/products - Create a new product
+app.post('/api/products', async (req, res) => {
+  const newProduct = {
+    id: uuidv4(),
+    ...req.body
+  };
+  products.push(newProduct);
+  res.status(201).json(newProduct);
+});
+// PUT /api/products/:id - Update a product
+app.put('/api/products/:id', async (req, res) => {
+  const { id } = req.params;
+  const productIndex = products.findIndex(p => p.id === id);
+  if (productIndex !== -1) {
+    const updatedProduct = {
+      id,
+      ...req.body
+    };
+    products[productIndex] = updatedProduct;
+    res.status(200).json(updatedProduct);
+  } else {
+    res.status(404).json({ message: 'Product not found' });
+  }
+});
+// DELETE /api/products/:id - Delete a product
+app.delete('/api/products/:id', async (req, res) => {
+  const { id } = req.params;
+  const productIndex = products.findIndex(p => p.id === id);
+  if (productIndex !== -1) {
+    products.splice(productIndex, 1);
+    res.status(204).json({ message: 'Product deleted successfully' });
+  } else {
+    res.status(404).json({ message: 'Product not found' });
+  }
+});
+
 
 // TODO: Implement custom middleware for:
 // - Request logging

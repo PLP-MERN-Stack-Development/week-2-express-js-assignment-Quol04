@@ -1,0 +1,20 @@
+# Ignore all log files
+*.log
+npm-debug.log
+yarn-error.log
+# Ignore node_modules directory
+node_modules/
+# Ignore build output
+dist/
+# Ignore environment variables file
+.env
+# Ignore logs 
+logs/
+# Ignore coverage reports
+coverage/
+# Ignore temporary files
+*.tmp
+# Ignore IDE specific files
+.idea/
+# Ignore OS generated files
+.DS_Store
